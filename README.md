@@ -135,6 +135,7 @@ fib(40); // Much faster with memoization
 
 // ✅ TypeScript Memoization - Real-World Example
 
+```ts
 // Define a Product type
 type Product = {
   id: number;
