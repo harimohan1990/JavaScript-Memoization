@@ -131,4 +131,45 @@ const fib = memoize(function(n) {
 fib(40); // Much faster with memoization
 ```
 
+#realtime example 
+
+// ✅ TypeScript Memoization - Real-World Example
+
+// Define a Product type
+type Product = {
+  id: number;
+  name: string;
+};
+
+// Generate a large list of products
+const products: Product[] = Array.from({ length: 10000 }, (_, i) => ({
+  id: i,
+  name: `Product ${i}`,
+}));
+
+// Generic memoization function using Map
+function memoize<T extends (...args: any[]) => any>(fn: T): T {
+  const cache = new Map<string, ReturnType<T>>();
+
+  return function (...args: Parameters<T>): ReturnType<T> {
+    const key = JSON.stringify(args);
+    if (cache.has(key)) return cache.get(key)!;
+    const result = fn(...args);
+    cache.set(key, result);
+    return result;
+  } as T;
+}
+
+// Memoized search function
+const filterProducts = memoize((query: string): Product[] => {
+  return products.filter(p =>
+    p.name.toLowerCase().includes(query.toLowerCase())
+  );
+});
+
+// Simulate real-time search
+console.log('First call (not cached):', filterProducts("product 123"));
+console.log('Second call (cached):', filterProducts("product 123"));
+
+
 
