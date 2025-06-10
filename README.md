@@ -94,6 +94,22 @@ memoizedAdd(1, 2); // Cached → 3
 
 ---
 
+function memoize<T extends (...args: any[]) => any>(fn: T): T {
+  const cache = new Map<string, ReturnType<T>>();
+
+  return function (...args: Parameters<T>): ReturnType<T> {
+    const key = JSON.stringify(args);
+    if (cache.has(key)) {
+      return cache.get(key)!;
+    }
+
+    const result = fn(...args);
+    cache.set(key, result);
+    return result;
+  } as T;
+}
+
+
 ### 🧠 When to Use
 
 * Expensive computations (e.g. Fibonacci, factorial)
@@ -110,8 +126,9 @@ const fib = memoize(function(n) {
   return fib(n - 1) + fib(n - 2);
 });
 
+
+
 fib(40); // Much faster with memoization
 ```
 
----
 
